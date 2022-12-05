@@ -1,6 +1,6 @@
-# Advent of Code 2022
+# My collection of Advent of Code challenges
 
 ## Links:
 
-- [Challenge Link](https://adventofcode.com/2022)
+- [2022 Challenge Link](https://adventofcode.com/2022)
 - [LW Link](https://aoc.lewagon.community/)
