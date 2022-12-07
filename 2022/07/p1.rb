@@ -34,18 +34,35 @@ end
 
 make_file_system(file_system, groups)
 
-main_dir = file_system["/"]
-pp main_dir
+puts "File system:"
+pp file_system
+puts
+rest_dir = file_system.reject { |k, _| k == "/" }
+puts "Other dirs:"
+pp rest_dir
 puts
 
-# until file_system.keys.length == 1
-  # Grabs main directory
-  main_dir = file_system["/"]
-  # Grabs ever other directories that should be found somewhere within and replaced with
-  rest_dir = file_system.reject { |k, _| k == "/" }
-  rest_dir.each do |k, v|
-    p k
-    p v.reject { |k2, _| k2 == "contents" }
-    puts
-  end
+# Go over the directories that needs to be put in
+# rest_dir.each do |k, v|
+#   if file_system["/"][k] == {}
+#     file_system["/"][k] = v
+#     file_system.delete(k)
+#   end
 # end
+
+main_keys = file_system["/"].keys.reject { |k| k == "contents" }
+puts "Main keys:"
+p main_keys
+puts
+keys_to_remove = rest_dir.keys - main_keys
+puts "keys to remove:"
+p keys_to_remove
+
+until main_keys.sort == rest_dir.keys.sort do
+  break
+end
+
+puts
+print "----------------------"
+puts "\nModified file system:"
+pp file_system
