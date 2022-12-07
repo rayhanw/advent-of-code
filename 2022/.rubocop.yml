@@ -9,3 +9,6 @@ Metrics/AbcSize:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Style/CaseLikeIf:
+  Enabled: false
