@@ -32,10 +32,6 @@ map.each_with_index do |sub_map, y|
     up_blocked = up_index.nil?
     up_visibility = up_blocked ? up_neighbors.count : up_neighbors[0..up_index].count
     puts "\s-> up VIS: #{up_visibility}".colorize(:red)
-    # up_visibility = up_index ? up_neighbors[0..up_index].count : 0
-    # p "up idx: #{up_index}"
-    # p "up vis neighbors: #{up_neighbors[0..up_index]}"
-    # puts "\s-> up VIS: #{up_visibility}"
 
     #left check
     left_index = left_neighbors.find_index { |num| num >= height }
@@ -65,56 +61,6 @@ map.each_with_index do |sub_map, y|
     puts
   end
 end
-
-# map[1..-2].each_with_index do |sub, y|
-#   sub[1..-2].each_with_index do |ele, x|
-#     up = map.map { |sub_e| sub_e[x + 1] }.first(y + 2)
-#     right = sub[(x + 1)..-1].reverse
-#     down = map.map { |sub_e| sub_e[x + 1] }.last(max_row - 1 - y).reverse
-#     left = sub[0..(x + 1)]
-#     p "ele: #{ele}"
-#     res = []
-
-#     # up check
-#     up_covers = up[0..-2].reverse
-#     t_index = up_covers.find_index { |num| up.last <= num }
-#     up_count = t_index ? up_covers[0..t_index].count : 1
-#     p up_covers
-#     p "up: #{up_covers[0..t_index]}"
-#     # p "up_count: #{up_count}"
-
-
-#     # Left check
-#     left_covers = left[0..-2].reverse
-#     l_index = left_covers.find_index { |num| left.last <= num }
-#     left_count = left_covers[0..l_index].count
-#     p left_covers
-#     p "left: #{left_covers[0..l_index]}"
-#     # p "left_count: #{left_count}"
-
-#     # down check
-#     down_covers = down[0..-2].reverse
-#     d_index = down_covers.find_index { |num| down.last <= num }
-#     down_count = down_covers[0..d_index].count
-#     p down_covers
-#     p "down: #{down_covers[0..d_index]}"
-#     # p "down_count: #{down_count}"
-
-#     # Right check
-#     right_covers = right[0..-2].reverse
-#     r_index = right_covers.find_index { |num| right.last <= num }
-#     right_count = right_covers[0..r_index].count
-#     p right_covers
-#     p "right: #{right_covers[0..r_index]}"
-#     # p "right_count: #{right_count}"
-
-#     total_visibility = left_count * up_count * right_count * down_count
-#     res << total_visibility
-
-#     puts
-#     counts.unshift res
-#   end
-# end
 
 puts "counts:"
 p counts.flatten.sort.reverse
