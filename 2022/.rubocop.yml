@@ -12,3 +12,12 @@ Style/FrozenStringLiteralComment:
 
 Style/CaseLikeIf:
   Enabled: false
+
+Style/CombinableLoops:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
