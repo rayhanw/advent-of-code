@@ -6,3 +6,9 @@ Metrics/AbcSize:
 
 Metrics/MethodLength:
   Enabled: false
+
+Style/CombinableLoops:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
