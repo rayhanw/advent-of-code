@@ -1,0 +1,46 @@
+seeds: 79 14 55 13
+seed: 79
+
+seed-to-soil map:
+Destination 50
+Source 98
+Range 2
+
+Destination 52
+Source 50
+Range 48
+
+# seed-to-soil steps:
+1. Get current seed [79]
+2. `diff`=current seed - source [79-50=29]
+3. `pot`=diff + destination [29+52=81]
+4. `limit`=destination + range [52+48=100]
+5. If `pot` is below `limit`, then `pot` is the new seed [81] <- This is answer
+6. If `pot` is above `limit`, then `pot` is the initial seed [79]
+
+soil-to-fertilizer map:
+Destination 0
+Source 15
+Range 37
+
+Destination 37
+Source 52
+Range 2
+
+Destination 39
+Source 0
+Range 15
+
+# soil-to-fertilizer steps:
+1. Get current soil [14]
+2. `diff`=current soil - source [14-0=15]
+3. `pot`=diff + destination [15+39=54]
+4. `limit`=destination + range [39+15=54]
+5. If `pot` is below `limit`, then `pot` is the new soil [54] <- This is answer
+6. If `pot` is above `limit`, then `pot` is the initial soil [14]
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
