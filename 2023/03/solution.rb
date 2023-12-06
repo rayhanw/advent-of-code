@@ -75,7 +75,7 @@ neighbors.each do |h|
 end
 
 answer = []
-neighbor_groups.each do |k, v|
+neighbor_groups.each do |_, v|
   answer << v.uniq
 end
 
