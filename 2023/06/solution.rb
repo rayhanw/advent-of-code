@@ -11,7 +11,6 @@ times.length.times do |i|
 end
 
 possibilities_count = races.map do |_, race|
-  p race
   (race[:time] + 1).times do |i|
     hold_time = i
     possibility = {

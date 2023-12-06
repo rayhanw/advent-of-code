@@ -8,7 +8,6 @@ puts "Time #{time}"
 puts "Distance #{distance}"
 puts
 
-possibilities = []
 count = 0
 (time + 1).times do |i|
   hold_time = i
