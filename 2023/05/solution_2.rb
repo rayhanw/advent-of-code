@@ -23,44 +23,96 @@ temperature_to_humidity_map = generate_map(file, 'temperature-to-humidity map:')
 humidity_to_location_map = generate_map(file, 'humidity-to-location map:')
 
 puts "Seeds"
-p initial_seeds
+ANSWER = 59_370_572
+slices = initial_seeds.each_slice(2).map { |slice| "#{slice[0]}..#{slice[0] + slice[1]}" }
+p slices
+
 ### Full Map ###
 full_map = {}
 puts "\nSeed to Soil"
 seed_to_soil_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 
 puts "\nSoil to Fertilizer"
 soil_to_fertilizer_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 puts "\nFertilizer to Water"
 fertilizer_to_water_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 puts "\nWater to Light"
 water_to_light_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 puts "\nLight to Temperature"
 light_to_temperature_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 puts "\nTemperature to Humidity"
 temperature_to_humidity_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 puts "\nHumidity to Location"
 humidity_to_location_map.each do |map|
-  m = { source: map[:source], destination: map[:destination]}
-  p m
+  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
+  m = {
+    source: map[:source].to_i,
+    destination: map[:destination].to_i,
+    range: map[:range].to_i,
+    destination_range: "range(#{range})",
+    cover: range.cover?(ANSWER)
+  }
+  p m if m[:cover]
 end
 
 puts "\nFull map:"
