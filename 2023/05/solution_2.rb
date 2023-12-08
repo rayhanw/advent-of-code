@@ -5,8 +5,12 @@ require_relative 'helpers'
 
 aoc = Helpers::AdventOfCode.new(File.join(__dir__, 'input.txt'))
 file = aoc.file
+seeds = file[0].gsub('seeds: ', '').split(' ').map(&:to_i).each_slice(2).to_a.map { |slice| [slice[0], slice[1]] }
+seeds.each do |seed|
+  puts ColorizedString["Seed #{seed[0]}, range #{seed[1]}"].colorize(:green)
+end
+puts
 
-initial_seeds = file[0].gsub('seeds: ', '').split(' ').map(&:to_i)
 ### Seed to Soil ###
 seed_to_soil_map = generate_map(file, 'seed-to-soil map:')
 ### Soil to Fertilizer ###
@@ -22,215 +26,80 @@ temperature_to_humidity_map = generate_map(file, 'temperature-to-humidity map:')
 ### Humidity to Location ###
 humidity_to_location_map = generate_map(file, 'humidity-to-location map:')
 
-puts "Seeds"
-ANSWER = 59_370_572
-slices = initial_seeds.each_slice(2).map { |slice| "#{slice[0]}..#{slice[0] + slice[1]}" }
-p slices
-
-### Full Map ###
-full_map = {}
-puts "\nSeed to Soil"
-seed_to_soil_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
+locations = []
+locations_two = []
+locations_three = []
+seeds.each do |seed|
+  run_flow(seed, seed_to_soil_map:, soil_to_fertilizer_map:, fertilizer_to_water_map:, water_to_light_map:, light_to_temperature_map:, temperature_to_humidity_map:, humidity_to_location_map:, locations:)
 end
-
-puts "\nSoil to Fertilizer"
-soil_to_fertilizer_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
+p locations
+locations.each do |seed|
+  run_flow(seed, seed_to_soil_map:, soil_to_fertilizer_map:, fertilizer_to_water_map:, water_to_light_map:, light_to_temperature_map:, temperature_to_humidity_map:, humidity_to_location_map:, locations: locations_two)
 end
-puts "\nFertilizer to Water"
-fertilizer_to_water_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
+p locations_two
+locations_two.each do |seed|
+  run_flow(seed, seed_to_soil_map:, soil_to_fertilizer_map:, fertilizer_to_water_map:, water_to_light_map:, light_to_temperature_map:, temperature_to_humidity_map:, humidity_to_location_map:, locations: locations_three)
 end
-puts "\nWater to Light"
-water_to_light_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
-end
-puts "\nLight to Temperature"
-light_to_temperature_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
-end
-puts "\nTemperature to Humidity"
-temperature_to_humidity_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
-end
-puts "\nHumidity to Location"
-humidity_to_location_map.each do |map|
-  range = (map[:destination].to_i..(map[:destination].to_i + map[:range].to_i))
-  m = {
-    source: map[:source].to_i,
-    destination: map[:destination].to_i,
-    range: map[:range].to_i,
-    destination_range: "range(#{range})",
-    cover: range.cover?(ANSWER)
-  }
-  p m if m[:cover]
-end
-
-puts "\nFull map:"
-p full_map
-
-# summary = []
-# initial_seeds = file[0].gsub('seeds: ', '').split(' ').map(&:to_i)
-# seeds = [initial_seeds[0], initial_seeds[0] + initial_seeds[1] - 1]
-# locations = []
+p locations_three
 # seeds.each do |seed|
-#   info = { seed: }
-
-#   # Seed to Soil
-#   potential_soils = []
-#   seed_to_soil_map.each do |map|
-#     diff = seed.to_i - map[:source].to_i
-#     if diff.negative?
-#       info[:soil] = seed.to_i
-#       next
-#     end
-#     pot = diff + map[:destination].to_i
-#     info[:soil] = pot > map[:limit] ? seed.to_i : pot
-#     potential_soils << { diff:, value: info[:soil] }
-#   end
-#   info[:soil] = potential_soils.min_by { |i| i[:diff] }[:value] if potential_soils.length.positive?
-
-#   # Soil to Fertilizer
-#   potential_fertilizers = []
-#   soil_to_fertilizer_map.each do |map|
-#     diff = info[:soil] - map[:source].to_i
-#     if diff.negative?
-#       info[:fertilizer] = info[:soil]
-#       next
-#     end
-#     pot = diff + map[:destination].to_i
-#     info[:fertilizer] = pot > map[:limit] ? info[:soil] : pot
-#     potential_fertilizers << { diff:, value: info[:fertilizer] }
-#   end
-#   info[:fertilizer] = potential_fertilizers.min_by { |i| i[:diff] }[:value] if potential_fertilizers.length.positive?
-
-#   # Fertilizer to Water
-#   potential_waters = []
-#   fertilizer_to_water_map.each do |map|
-#     diff = info[:fertilizer] - map[:source].to_i
-#     if diff.negative?
-#       info[:water] = info[:fertilizer]
-#       next
-#     end
-#     pot = diff + map[:destination].to_i
-#     info[:water] = pot > map[:limit] ? info[:fertilizer] : pot
-#     potential_waters << { diff:, value: info[:water] }
-#   end
-#   info[:water] = potential_waters.min_by { |i| i[:diff] }[:value] if potential_waters.length.positive?
-
-#   # Water to Light
-#   potential_lights = []
-#   water_to_light_map.each do |map|
-#     diff = info[:water] - map[:source].to_i
-#     if diff.negative?
-#       info[:light] = info[:water]
-#       next
-#     end
-
-#     pot = diff + map[:destination].to_i
-#     info[:light] = pot > map[:limit] ? info[:water] : pot
-#     potential_lights << { diff:, value: info[:light] }
-#   end
-#   info[:light] = potential_lights.min_by { |i| i[:diff] }[:value] if potential_lights.length.positive?
-
-#   # Light to Temperature
-#   potential_temperatures = []
-#   light_to_temperature_map.each do |map|
-#     diff = info[:light] - map[:source].to_i
-#     if diff.negative?
-#       info[:temperature] = info[:light]
-#       next
-#     end
-
-#     pot = diff + map[:destination].to_i
-#     info[:temperature] = pot > map[:limit] ? info[:light] : pot
-#     potential_temperatures << { diff:, value: info[:temperature] }
-#   end
-#   info[:temperature] = potential_temperatures.min_by { |i| i[:diff] }[:value] if potential_temperatures.length.positive?
-
-#   # Temperature to Humidity
-#   potential_humidities = []
-#   temperature_to_humidity_map.each do |map|
-#     diff = info[:temperature] - map[:source].to_i
-#     if diff.negative?
-#       info[:humidity] = info[:temperature]
-#       next
-#     end
-
-#     pot = diff + map[:destination].to_i
-#     info[:humidity] = pot > map[:limit] ? info[:temperature] : pot
-#     potential_humidities << { diff:, value: info[:humidity] }
-#   end
-#   info[:humidity] = potential_humidities.min_by { |i| i[:diff] }[:value] if potential_humidities.length.positive?
-
-#   # Humidity to Location
-#   potential_locations = []
-#   humidity_to_location_map.each do |map|
-#     diff = info[:humidity] - map[:source].to_i
-#     if diff.negative?
-#       info[:location] = info[:humidity]
-#       next
-#     end
-
-#     pot = diff + map[:destination].to_i
-#     info[:location] = pot > map[:limit] ? info[:humidity] : pot
-#     potential_locations << { diff:, value: info[:location] }
-#   end
-#   info[:location] = potential_locations.min_by { |i| i[:diff] }[:value] if potential_locations.length.positive?
-
-#   locations << info[:location]
-#   puts ColorizedString["Seed: #{info[:seed]}, soil #{info[:soil]}, fertilizer #{info[:fertilizer]}, water #{info[:water]}, light #{info[:light]}, temperature #{info[:temperature]}, humidity #{info[:humidity]}, location #{info[:location]}"].colorize(:light_blue)
+#   puts "seed-to-soil:"
+#   soil_range = transform(seed, seed_to_soil_map)
+#   puts "soil-to-fertilizer:"
+#   fertilizer_range = transform(soil_range, soil_to_fertilizer_map)
+#   puts "fertilizer-to-water:"
+#   water_range = transform(fertilizer_range, fertilizer_to_water_map)
+#   puts "water-to-light:"
+#   light_range = transform(water_range, water_to_light_map)
+#   puts "light-to-temperature:"
+#   temperature_range = transform(light_range, light_to_temperature_map)
+#   puts "temperature-to-humidity:"
+#   humidity_range = transform(temperature_range, temperature_to_humidity_map)
+#   puts "humidity-to-location:"
+#   location_range = transform(humidity_range, humidity_to_location_map)
+#   puts "location: #{[location_range[0], location_range[0]+location_range[1]-1]}"
+#   seeds_v2 << location_range
+#   puts
 # end
-
-# summary << locations.min unless (locations[0] - locations[1]).abs == 1 || (locations[1] - locations[0]).abs == 1
-
-# # puts ColorizedString["ANSWER: #{locations.min}"].colorize(:green)
+# puts "--------------------------------------------------------------------------"
+# seeds_v3 = []
+# seeds_v2.each do |seed|
+#   puts "seed-to-soil:"
+#   soil_range = transform(seed, seed_to_soil_map)
+#   puts "soil-to-fertilizer:"
+#   fertilizer_range = transform(soil_range, soil_to_fertilizer_map)
+#   puts "fertilizer-to-water:"
+#   water_range = transform(fertilizer_range, fertilizer_to_water_map)
+#   puts "water-to-light:"
+#   light_range = transform(water_range, water_to_light_map)
+#   puts "light-to-temperature:"
+#   temperature_range = transform(light_range, light_to_temperature_map)
+#   puts "temperature-to-humidity:"
+#   humidity_range = transform(temperature_range, temperature_to_humidity_map)
+#   puts "humidity-to-location:"
+#   location_range = transform(humidity_range, humidity_to_location_map)
+#   puts "location: #{[location_range[0], location_range[0]+location_range[1]-1]}"
+#   seeds_v3 << location_range
+#   puts
+# end
+# puts "--------------------------------------------------------------------------"
+# seeds_v3.each do |seed|
+#   puts "seed-to-soil:"
+#   soil_range = transform(seed, seed_to_soil_map)
+#   puts "soil-to-fertilizer:"
+#   fertilizer_range = transform(soil_range, soil_to_fertilizer_map)
+#   puts "fertilizer-to-water:"
+#   water_range = transform(fertilizer_range, fertilizer_to_water_map)
+#   puts "water-to-light:"
+#   light_range = transform(water_range, water_to_light_map)
+#   puts "light-to-temperature:"
+#   temperature_range = transform(light_range, light_to_temperature_map)
+#   puts "temperature-to-humidity:"
+#   humidity_range = transform(temperature_range, temperature_to_humidity_map)
+#   puts "humidity-to-location:"
+#   location_range = transform(humidity_range, humidity_to_location_map)
+#   puts "location: #{[location_range[0], location_range[0]+location_range[1]-1]}"
+#   locations << location_range
+#   puts
+# end
+# puts "--------------------------------------------------------------------------"
+# p locations.min_by { |slice| slice[0] }

@@ -25,5 +25,14 @@ Style/RedundantInterpolation:
 Style/StringLiterals:
   Enabled: false
 
+Style/Next:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
 Style/CaseLikeIf:
+  Enabled: false
+
+Style/MultilineBlockChain:
   Enabled: false

@@ -1,58 +1,160 @@
-seeds: 79 14 55 13
-seed: 79
-
 seed-to-soil map:
-Destination 50
-Source 98
-Range 2
-
-Destination 52
-Source 50
-Range 48
-
-# seed-to-soil steps:
-1. Get current seed [79]
-2. `diff`=current seed - source [79-50=29]
-3. `pot`=diff + destination [29+52=81]
-4. `limit`=destination + range [52+48=100]
-5. If `pot` is below `limit`, then `pot` is the new seed [81] <- This is answer
-6. If `pot` is above `limit`, then `pot` is the initial seed [79]
+50 98 2 > [98 99] -> [50 51]
+52 50 48 [50..97] -> [52..99]
 
 soil-to-fertilizer map:
-Destination 0
-Source 15
-Range 37
-
-Destination 37
-Source 52
-Range 2
-
-Destination 39
-Source 0
-Range 15
-
-# soil-to-fertilizer steps:
-1. Get current soil [14]
-2. `diff`=current soil - source [14-0=15]
-3. `pot`=diff + destination [15+39=54]
-4. `limit`=destination + range [39+15=54]
-5. If `pot` is below `limit`, then `pot` is the new soil [54] <- This is answer
-6. If `pot` is above `limit`, then `pot` is the initial soil [14]
+0 15 37 [15..52] -> [0..36]
+37 52 2 [52 53] -> [37 38]
+39 0 15 [0..14] -> [39..53]
 
 fertilizer-to-water map:
-49 53 8
-0 11 42
-42 0 7
-57 7 4
+49 53 8 [53..60] -> [49..56]
+0 11 42 -> [11..52] -> [0..41]
+42 0 7 -> [0..6] -> [42..48]
+57 7 4 [7 8 9 10] -> [57 58 59 60]
 
+water-to-light map:
+88 18 7 [18..24] -> [88..94]
+18 25 70 [25..94] -> [18..87]
 
+light-to-temperature map:
+45 77 23 [77..99] -> [45..67]
+81 45 19 -> [45..63] -> [81..99]
+68 64 13 -> [64..76] -> [68..80]
 
-S
-[98 99]
-D
-[50 51]
+temperature-to-humidity map:
+0 69 1 [69] -> [0]
+1 0 69 -> [0..68] -> [1..69]
 
-S
-[50 51 .. 99]
-D
-[52 53 .. 100]
+humidity-to-location map:
+60 56 37 [56..92] -> [60..96]
+56 93 4 -> [93 94 95 96] -> [56 57 58 59]
+
+Mapping formula:
+1. Check if seed is in range; (seed-sourceLow)>0
+2. If yes; (seed-sourceLow)+destinationLow
+3. If no; map to themself (number doesn't change)
+
+Seeds [55, 13]
+min=55
+max=67
+
+1. seed-to-soil
+Seed 55
+Is in range
+(55-50)+52 = 57
+Seed 67
+Is in range
+(67-50)+52 = 69
+
+2. soil-to-fertilizer
+Seed 57
+Is not in range
+57
+Seed 69
+Is not in range
+69
+
+3. fertilizer-to-water
+Seed 57
+Is in range
+(57-53)+49 = 53
+Seed 69
+Is not in range
+69
+
+4. water-to-light
+Seed 53
+Is in range
+(53-25)+18 = 46
+Seed 69
+Is in range
+(69-25)+18 = 62
+
+5. light-to-temperature
+Seed 46
+Is in range
+(46-45)+81 = 82
+Seed 62
+Is in range
+(62-45)+81 = 98
+
+6. temperature-to-humidity
+Seed 82
+Is not in range
+82
+Seed 98
+Is not in range
+98
+
+7. humidity-to-location
+Seed 82
+Is in range
+(82-56)+60 = 86
+Seed 98
+Is not in range
+98
+
+FINAL RANGE [86, 98]
+------------------------------------------------------------------------------
+1. seed-to-soil
+Seeds [79, 14]
+min=79
+max=92
+
+Seed 79
+Is in range
+(79-50)+52 = 81
+Seed 92
+Is in range
+(92-50)+52 = 94
+
+2. soil-to-fertilizer
+Seed 81
+Is not in range
+81
+Seed 94
+Is not in range
+
+3. fertilizer-to-water
+Seed 81
+Is not in range
+81
+Seed 94
+Is not in range
+94
+
+4. water-to-light
+Seed 81
+Is in range
+(81-25)+18 = 74
+Seed 94
+Is in range
+(94-25)+18 = 87
+
+5. light-to-temperature
+Seed 74
+Is in range
+(74-64)+68 = 78
+Seed 87
+Is in range
+(87-77)+45 = 55
+
+6. temperature-to-humidity
+Seed 78
+Is not in range
+78
+Seed 55
+Is in range
+(55-0)+1 = 56
+
+7. humidity-to-location
+Seed 78
+Is in range
+(78-56)+60 = 82
+Seed 56
+Is in range
+(56-56)+60 = 60
+
+FINAL RANGE [82, 62]
+------------------------------------------------------------------------------
