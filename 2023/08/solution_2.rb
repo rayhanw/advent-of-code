@@ -14,26 +14,21 @@ file[1..].each do |line|
 end
 
 starting_points = directions.select { |direction, _| direction.end_with?('A') }
-pp starting_points
 
-answer = 0
-current_positions = starting_points.keys
-until current_positions.all? { |pos| pos.end_with?('Z') }
-  lol = current_positions.map do |current_position|
+answers = []
+starting_points.each do |starting_point, dirs|
+  answer = 0
+  point = starting_point.dup
+  until point.end_with?('Z')
     ins = instructions[answer % instructions.length]
-    current_spot = directions[current_position]
+    current_spot = directions[point]
     direction = ins == 'L' ? :LEFT : :RIGHT
-    # puts current_spot
-    current_position = current_spot[direction]
-    # puts "curr pos #{current_position}"
-
-    current_position
+    point = current_spot[direction]
+    answer += 1
   end
-
-  current_positions = lol
-  answer += 1
-  p lol
+  answers << answer
 end
 
 puts ColorizedString['---------------------------------------------------------'].colorize(:cyan)
+answer = answers.reduce(1) { |acc, n| acc.lcm(n) }
 puts ColorizedString["Answer: #{answer}"].colorize(:green)
