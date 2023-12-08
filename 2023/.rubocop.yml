@@ -24,3 +24,6 @@ Style/RedundantInterpolation:
 
 Style/StringLiterals:
   Enabled: false
+
+Style/CaseLikeIf:
+  Enabled: false
