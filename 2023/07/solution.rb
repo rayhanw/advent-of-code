@@ -11,7 +11,7 @@ ATTEMPTS = [
   253_603_890 # 6. GOOD STUFF
 ].freeze
 
-HANDS = %w[A K Q T 9 8 7 6 5 4 3 2 J].reverse.freeze
+HANDS = %w[A K Q J T 9 8 7 6 5 4 3 2].reverse.freeze
 
 aoc = Helpers::AdventOfCode.new(File.join(__dir__, 'input.txt'))
 file = aoc.file
