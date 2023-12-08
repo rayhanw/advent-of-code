@@ -7,11 +7,11 @@ ATTEMPTS = [
   253_898_949, # 2. Too high
   253_638_572, # 3. WRONG
   254_022_014, # 4. WRONG
+  253_694_816, # 5. WRONG
+  253_603_890 # 6. GOOD STUFF
 ].freeze
 
-# Cards:
-# value corresponds to the index of the card in the array
-HANDS = %w[A K Q J T 9 8 7 6 5 4 3 2].reverse.freeze
+HANDS = %w[A K Q T 9 8 7 6 5 4 3 2 J].reverse.freeze
 
 aoc = Helpers::AdventOfCode.new(File.join(__dir__, 'input.txt'))
 file = aoc.file
@@ -69,22 +69,7 @@ hands.each do |hand|
 end
 
 hand_groups.each do |score, hand_group|
-  groups = hand_group.group_by { |hand| count_initial_occurrences(hand[:hand]) }
-  ls = []
-  groups.each do |occurence_pos, group|
-    l = group.sort_by { |hand| HANDS.index(hand[:hand][occurence_pos]) }
-    ls << l
-  end
-  hand_groups[score] = ls.flatten.sort_by { |a| a[:hand][0] }.sort_by { |hand| HANDS.index(hand[:highest]) }
-end
-
-puts '---------------------------------------------------------------'
-puts "### Sorted ###"
-puts
-hand_groups.each do |score, hand_group|
-  puts score
-  pp hand_group
-  puts
+  hand_groups[score] = hand_group.sort_by { |hand| [HANDS.index(hand[:hand][0]), HANDS.index(hand[:hand][1]), HANDS.index(hand[:hand][2]), HANDS.index(hand[:hand][3]), HANDS.index(hand[:hand][4])] }
 end
 
 # Arrange
