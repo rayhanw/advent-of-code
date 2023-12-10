@@ -36,3 +36,6 @@ Style/CaseLikeIf:
 
 Style/MultilineBlockChain:
   Enabled: false
+
+Lint/UselessTimes:
+  Enabled: false
