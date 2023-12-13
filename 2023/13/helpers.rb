@@ -22,10 +22,9 @@ def check_reflection(array, other)
   checklist.all? { |c| c == true }
 end
 
-def count_reflection(pattern)
+def count_reflection(pattern, type)
   amount = 0
-  (2..(pattern.size - 1)).to_a.each do |i|
-    # puts ColorizedString["Splitting at #{i} and #{i + 1}"].colorize(:yellow)
+  (1..(pattern.size - 1)).to_a.each do |i|
     reflections = split_to_reflection(pattern, i)
     longer_array = reflections.max_by(&:length)
     longer_array_idx = reflections.index(longer_array)
@@ -43,7 +42,14 @@ def count_reflection(pattern)
     sublist[1].reverse!
 
     is_a_reflection = check_reflection(*sublist)
-    # puts "Reflection: #{is_a_reflection}"
+    color = is_a_reflection ? :green : :red
+    puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow) if is_a_reflection
+    if is_a_reflection
+      sublist.each do |sub|
+        puts sub.join(' ')
+      end
+    end
+    puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}" if is_a_reflection
     amount = i if is_a_reflection
   end
 

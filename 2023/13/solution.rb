@@ -14,19 +14,19 @@ patterns = file.slice_before(&:empty?).to_a.map { |group| group.reject(&:empty?)
 
 patterns.each_with_index do |pattern, i|
   puts ColorizedString["Pattern #{i + 1}"].colorize(:green)
-  pattern.each_with_index do |line, i|
-    puts "[#{i + 1}] #{line}"
+  pattern.each_with_index do |line, j|
+    puts "[#{j + 1}] #{line}"
   end
   puts
 end
 
 patterns.each do |pattern|
-  puts ColorizedString["OG Pattern:"].colorize(color: :light_blue, mode: :bold)
-  puts pattern.join("\n")
+  # puts ColorizedString["OG Pattern:"].colorize(color: :light_blue, mode: :bold)
+  # puts pattern.join("\n")
 
   # Check for reflection in row level
-  reflections[:rows] += count_reflection(pattern)
-  reflections[:columns] += count_reflection(pattern.map(&:chars).transpose.map(&:join))
+  reflections[:rows] += count_reflection(pattern, :ROW)
+  reflections[:columns] += count_reflection(pattern.map(&:chars).transpose.map(&:join), :COLUMN)
   puts
 end
 
