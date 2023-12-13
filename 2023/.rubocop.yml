@@ -39,3 +39,6 @@ Style/MultilineBlockChain:
 
 Lint/UselessTimes:
   Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
