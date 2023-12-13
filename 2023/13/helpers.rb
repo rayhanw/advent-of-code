@@ -1,4 +1,9 @@
 MULTIPLIER = 100
+SMUDGE_ACTIONS = {
+  REPLACE: 'REPLACE',
+  KEEP: 'KEEP',
+  REMOVE: 'REMOVE'
+}
 
 def summarize_answer(number_of_columns:, number_of_rows:)
   (number_of_rows * MULTIPLIER) + number_of_columns
@@ -22,8 +27,23 @@ def check_reflection(array, other)
   checklist.all? { |c| c == true }
 end
 
-def count_reflection(pattern, type)
+def check_for_smudge(array, other)
+  condensed_array = array.join('')
+  condensed_other = other.join('')
+  differences = []
+  condensed_array.size.times do |i|
+    differences << (condensed_array[i] == condensed_other[i])
+    return false if differences.count(false) > 1
+  end
+
+  return true if differences.count(false) == 1
+
+  false
+end
+
+def count_reflection(pattern, type = nil, should_print: false)
   amount = 0
+  amounts = []
   (1..(pattern.size - 1)).to_a.each do |i|
     reflections = split_to_reflection(pattern, i)
     longer_array = reflections.max_by(&:length)
@@ -43,15 +63,26 @@ def count_reflection(pattern, type)
 
     is_a_reflection = check_reflection(*sublist)
     color = is_a_reflection ? :green : :red
-    puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow) if is_a_reflection
-    if is_a_reflection
-      sublist.each do |sub|
-        puts sub.join(' ')
-      end
+    # puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
+    # Check for smudge
+    has_smudge = check_for_smudge(*sublist)
+    # puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
+    # If there is a smudge, return early
+    if has_smudge
+      # puts "Has smudge at #{i}"
+      amount = i
+      amounts << i
     end
-    puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}" if is_a_reflection
-    amount = i if is_a_reflection
+    # sublist.each do |sub|
+    #   puts sub.join(' ')
+    # end
+
+    # puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
+    if is_a_reflection && !has_smudge
+      amounts << i
+      amount = i
+    end
   end
 
-  amount
+  { amount:, amounts: }
 end
