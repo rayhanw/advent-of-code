@@ -3,7 +3,7 @@ require_relative 'helpers'
 require_relative '../../helpers/advent_of_code'
 
 ANSWERS = [
-  36_107, # 1. Too low
+  47_849, # 1. Too high
 ].freeze
 
 reflections = { rows: 0, columns: 0 }
@@ -25,12 +25,12 @@ patterns.each do |pattern|
   # puts pattern.join("\n")
 
   # Check for reflection in row level
-  row_refs = count_reflection(pattern, :ROW, should_print: true)
-  p "row_refs #{row_refs}"
-  col_refs = count_reflection(pattern.map(&:chars).transpose.map(&:join), :COLUMN, should_print: true)
-  p "col_refs #{col_refs}"
-  reflections[:rows] += row_refs[:amount]
-  reflections[:columns] += col_refs[:amount]
+  collection = []
+  row_refs = count_reflection(pattern, :ROW, should_print: true, collection:)
+  p collection
+  col_refs = count_reflection(pattern.map(&:chars).transpose.map(&:join), :COLUMN, should_print: true, collection:)
+  reflections[:rows] += row_refs
+  reflections[:columns] += col_refs
   puts '------------------------------'
 end
 

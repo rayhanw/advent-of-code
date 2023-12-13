@@ -41,10 +41,11 @@ def check_for_smudge(array, other)
   false
 end
 
-def count_reflection(pattern, type = nil, should_print: false)
+def count_reflection(pattern, type = nil, should_print: false, collection:)
   amount = 0
-  amounts = []
   (1..(pattern.size - 1)).to_a.each do |i|
+    break if collection.size.positive?
+
     reflections = split_to_reflection(pattern, i)
     longer_array = reflections.max_by(&:length)
     longer_array_idx = reflections.index(longer_array)
@@ -63,26 +64,26 @@ def count_reflection(pattern, type = nil, should_print: false)
 
     is_a_reflection = check_reflection(*sublist)
     color = is_a_reflection ? :green : :red
-    # puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
+    puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
     # Check for smudge
     has_smudge = check_for_smudge(*sublist)
     # puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
+
     # If there is a smudge, return early
     if has_smudge
-      # puts "Has smudge at #{i}"
+      puts ColorizedString["Has smudge at #{type} #{i}"].colorize(:cyan)
       amount = i
-      amounts << i
+      collection << i
     end
     # sublist.each do |sub|
     #   puts sub.join(' ')
     # end
 
-    # puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
+    puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
     if is_a_reflection && !has_smudge
-      amounts << i
       amount = i
     end
   end
 
-  { amount:, amounts: }
+  amount
 end
