@@ -25,8 +25,9 @@ patterns.each do |pattern|
   # puts pattern.join("\n")
 
   # Check for reflection in row level
-  reflections[:rows] += count_reflection(pattern, :ROW)
-  reflections[:columns] += count_reflection(pattern.map(&:chars).transpose.map(&:join), :COLUMN)
+  collection = []
+  reflections[:rows] += count_reflection(pattern, :ROW, collection:, part: 1)
+  reflections[:columns] += count_reflection(pattern.map(&:chars).transpose.map(&:join), :COLUMN, collection:, part: 1)
   puts
 end
 

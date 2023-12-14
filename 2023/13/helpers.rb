@@ -1,9 +1,4 @@
 MULTIPLIER = 100
-SMUDGE_ACTIONS = {
-  REPLACE: 'REPLACE',
-  KEEP: 'KEEP',
-  REMOVE: 'REMOVE'
-}
 
 def summarize_answer(number_of_columns:, number_of_rows:)
   (number_of_rows * MULTIPLIER) + number_of_columns
@@ -41,7 +36,7 @@ def check_for_smudge(array, other)
   false
 end
 
-def count_reflection(pattern, type = nil, should_print: false, collection:)
+def count_reflection(pattern, type = nil, collection:, part:, should_print: false)
   amount = 0
   (1..(pattern.size - 1)).to_a.each do |i|
     break if collection.size.positive?
@@ -66,22 +61,32 @@ def count_reflection(pattern, type = nil, should_print: false, collection:)
     color = is_a_reflection ? :green : :red
     puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
     # Check for smudge
-    has_smudge = check_for_smudge(*sublist)
-    # puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
+    if part == 2
+      has_smudge = check_for_smudge(*sublist)
+      # puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
 
-    # If there is a smudge, return early
-    if has_smudge
-      puts ColorizedString["Has smudge at #{type} #{i}"].colorize(:cyan)
-      amount = i
-      collection << i
-    end
-    # sublist.each do |sub|
-    #   puts sub.join(' ')
-    # end
+      # If there is a smudge, return early
+      if has_smudge
+        puts ColorizedString["Has smudge at #{type} #{i}"].colorize(:cyan)
+        amount = i
+        collection << i
+      end
+      if is_a_reflection || has_smudge
+        sublist.each do |sub|
+          puts sub.join(' ')
+        end
+      end
 
-    puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
-    if is_a_reflection && !has_smudge
-      amount = i
+      puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
+      if is_a_reflection && !has_smudge
+        amount = i
+      end
+    else
+      puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
+      if is_a_reflection
+        amount = i
+        collection << i
+      end
     end
   end
 
