@@ -39,7 +39,7 @@ end
 def count_reflection(pattern, type = nil, collection:, part:, should_print: false)
   amount = 0
   (1..(pattern.size - 1)).to_a.each do |i|
-    break if collection.size.positive?
+    # break if collection.size.positive? && part == 2
 
     reflections = split_to_reflection(pattern, i)
     longer_array = reflections.max_by(&:length)
@@ -58,35 +58,36 @@ def count_reflection(pattern, type = nil, collection:, part:, should_print: fals
     sublist[1].reverse!
 
     is_a_reflection = check_reflection(*sublist)
-    color = is_a_reflection ? :green : :red
-    puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
-    # Check for smudge
     if part == 2
+      # Check for smudge
       has_smudge = check_for_smudge(*sublist)
-      # puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
+      if is_a_reflection || has_smudge
+        puts
+        puts sublist[0].join(' ')
+        puts sublist[1].join(' ')
+        color = is_a_reflection ? :green : :red
+        puts ColorizedString["Splitting at #{i} and #{i + 1} on #{type}"].colorize(:yellow)
+        puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
+        puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
+      end
 
       # If there is a smudge, return early
       if has_smudge
-        puts ColorizedString["Has smudge at #{type} #{i}"].colorize(:cyan)
         amount = i
-        collection << i
-      end
-      if is_a_reflection || has_smudge
-        sublist.each do |sub|
-          puts sub.join(' ')
-        end
+        collection << { i:, type: }
       end
 
+      # if is_a_reflection && !has_smudge
+      #   amount = i
+      #   collection << { i:, type: }
+      # end
+      # next
+    end
+
+    if part == 1
       puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
-      if is_a_reflection && !has_smudge
-        amount = i
-      end
-    else
-      puts "Reflection: #{ColorizedString["#{is_a_reflection}"].colorize(color)}"
-      if is_a_reflection
-        amount = i
-        collection << i
-      end
+      amount = i if is_a_reflection
+      next
     end
   end
 
