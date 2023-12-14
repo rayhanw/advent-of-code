@@ -6,4 +6,6 @@ module Helpers
       @file = File.readlines(filepath).map(&:strip)
     end
   end
+
+  class AoC < AdventOfCode; end
 end

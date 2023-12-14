@@ -42,3 +42,6 @@ Lint/UselessTimes:
 
 Style/TrailingCommaInArrayLiteral:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
