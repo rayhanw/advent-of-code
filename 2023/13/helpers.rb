@@ -71,17 +71,11 @@ def count_reflection(pattern, type = nil, collection:, part:, should_print: fals
         puts "Fixable by smudge: #{ColorizedString["#{has_smudge}"].colorize(has_smudge ? :green : :red)}"
       end
 
-      # If there is a smudge, return early
+      # If there is a smudge, then we can fix it
       if has_smudge
         amount = i
         collection << { i:, type: }
       end
-
-      # if is_a_reflection && !has_smudge
-      #   amount = i
-      #   collection << { i:, type: }
-      # end
-      # next
     end
 
     if part == 1
