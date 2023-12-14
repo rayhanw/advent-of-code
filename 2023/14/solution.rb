@@ -9,6 +9,7 @@ modified = []
 file.each do |line|
   puts line.join(" ")
 end
+puts
 
 file.transpose.each do |line|
   modified << bubble_sort(line)
