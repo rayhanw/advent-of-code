@@ -13,7 +13,8 @@ def print_boxes(boxes)
   boxes.each_with_index do |box, i|
     next if box.empty?
 
-    puts "Box #{i}: #{box}"
+    mapped = box.map { |b| b.split('=').join(' ') }
+    puts "Box #{i}: [#{mapped.join(' ')}]"
   end
 end
 
@@ -24,9 +25,12 @@ end
 def lens_index(boxes, query)
   boxes.each_with_index do |box, i|
     box.each_with_index do |lens, j|
-      return { outer: i, inner: j } if lens.start_with?(query)
+      if lens.start_with?(query)
+        label, _value = lens.split('=')
+      end
+      return { outer: i, inner: j } if label == query
     end
   end
 
-  return nil
+  nil
 end

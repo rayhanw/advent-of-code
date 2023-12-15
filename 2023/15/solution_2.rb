@@ -1,5 +1,10 @@
+require 'colorized_string'
 require_relative '../../helpers/advent_of_code'
 require_relative 'helpers'
+
+ANSWERS = [
+  251_925, # 1. Too high
+].freeze
 
 name = ARGV[0]
 path = File.join(__dir__, name ? 'sample.txt' : 'input.txt')
@@ -28,9 +33,18 @@ end
 puts '----------------------------------------'
 
 collection.each do |c|
-  puts "After \"#{c[:original]}\""
+  puts "After \"#{c[:original]}\":"
   if c[:operation] == '='
-    boxes[c[:box]] << c[:original]
+    idx = c[:box]
+    cleaned_list = boxes[idx].map { |x| strip_special_characters(x).gsub(/\d+/, '') }
+    stripped = strip_special_characters(c[:original]).gsub(/\d+/, '')
+    stripped_idx = cleaned_list.index(stripped)
+
+    if cleaned_list.include?(stripped)
+      boxes[idx][stripped_idx] = c[:original]
+    else
+      boxes[idx] << c[:original]
+    end
   else
     stripped = strip_special_characters(c[:original])
     idx = lens_index(boxes, stripped)
@@ -41,9 +55,19 @@ collection.each do |c|
 end
 
 puts '---------------------------------------'
-
+collections = []
 boxes.each_with_index do |box, i|
   next if box.empty?
 
-  # puts "Box #{i}: #{box}"
+  sum = 0
+  box.each_with_index do |item, j|
+    label, value = item.split('=')
+    value = value.to_i
+    total = (i + 1) * (j + 1) * value
+    sum += total
+    puts "- #{label}: `#{i + 1}` (box #{i}) * #{j + 1} * #{value} = #{total}"
+  end
+  collections << sum
 end
+
+puts ColorizedString["Answer: #{collections.sum}"].colorize(:green)
