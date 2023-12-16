@@ -2,25 +2,21 @@ require 'colorized_string'
 require_relative '../../helpers/advent_of_code'
 require_relative 'helpers'
 
-aoc = Helpers::AdventOfCode.new(File.join(__dir__, 'input.txt'))
+filepath = File.join(__dir__, ARGV[0] ? 'sample.txt' : 'input.txt')
+aoc = Helpers::AdventOfCode.new(filepath)
 file = aoc.file
 file.map! do |line|
-  springs, conditions = line.split(' ')
-  hints = conditions.split(',').map(&:to_i)
-  question_marks = []
-  springs.chars.each_with_index do |c, i|
-    question_marks << i if c == '?'
-  end
+  springs, arrangement = line.split(' ')
+  arrangement = arrangement.split(',').map(&:to_i)
 
-  groups = springs.split(/\.+/).reject(&:empty?)
-
-  { springs:, hints:, question_marks:, groups:, possibilities: 0 }
+  { springs:, arrangement: }
 end
 
-file.each do |line|
-  puts "Springs: #{line[:springs].chars.join(' ')}"
-  puts "Hints: #{line[:hints]}"
-  puts
-
-  check_hot_spring(line[:springs], line[:hints])
+sum = file.sum do |line|
+  springs = line[:springs]
+  arrangement = line[:arrangement]
+  # puts "#{springs}\t#{arrangement}"
+  generate_combinations(springs, arrangement).size
 end
+
+puts ColorizedString["Answer: #{sum}"].colorize(color: :green, mode: :bold)

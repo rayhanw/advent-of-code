@@ -1,32 +1,44 @@
-$counter = 0
+=begin
+  springs String
+  arrangement Array<Integer>
+=end
 
-def check_hot_spring(springs, hints)
-  puts springs.chars.join(' ')
-  if springs.start_with?('.')
-    # discard the . and recursively check again.
-    check_hot_spring(springs[1..], hints)
-  elsif springs.start_with?('?')
-    # replace the ? with a .
-    springs[0] = '.'
-    # and recursively check again
-    check_hot_spring(springs, hints)
-    # AND replace it with a #
-    springs[0] = '#'
-    # and recursively check again.
-    check_hot_spring(springs, hints)
-  elsif springs.start_with?('#')
-    # Find first non-. character after the index 0
-    substring = springs[1..]
-    index = substring.chars.find_index { |char| char != '.' } + 1
-    # check if it is long enough for the first group
-    sublist = substring[0..index]
-    if sublist.length < hints[0] && sublist.all? { |char| char != '.' }
-      check_hot_spring(springs[index..], hints[1..])
-    end
-  elsif springs == ''
-    puts "EMPTY"
+def generate_combinations(springs, arrangement)
+  # Base case: If there are no `?` left, return the current string
+  unless springs.include?('?')
+    # Handle logic to validate the string against the arrangement
+    return valid?(springs, arrangement) ? [springs] : []
   end
+
+  # Recursive case: Replace the first `?` with `#` and `.`
+  combinations = []
+  %w[# .].each do |replacement|
+    new_springs = springs.sub('?', replacement)
+    combinations.concat(generate_combinations(new_springs, arrangement))
+  end
+
+  combinations
 end
 
-def generate_variations(springs, hints)
+def valid?(springs, arrangement)
+  splitted = springs.split('.').reject(&:empty?)
+
+  # Case 1: The arrangement size is different than springs size
+  return false if splitted.size != arrangement.size
+
+  # Case 2: [Multiple routes] Arrangement size is equal to springs size
+  ### Pseudocode:
+  # 1. Iterate over `splitted`
+  # 2. For each element, check if the amount of `#` is equal to the arrangement at the same index
+  # 3. If it is, continue
+  # 4. If it is not, return false
+  ###
+  splitted.each_with_index do |item, idx|
+    hash_count = item.count('#')
+    current_arrangement = arrangement[idx]
+
+    return false if hash_count != current_arrangement
+  end
+
+  true
 end
