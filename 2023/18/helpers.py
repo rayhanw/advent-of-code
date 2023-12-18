@@ -1,3 +1,10 @@
+MAPPING = {
+    '0': 'R',
+    '1': 'D',
+    '2': 'L',
+    '3': 'U'
+}
+
 def create_grid(width, height):
     return [['.' for _ in range(width)] for _ in range(height)]
 
@@ -92,3 +99,23 @@ def fill_lagoon(grid):
         for x in range(len(grid[0])):
             if grid[y][x] == 'o':
                 grid[y][x] = '.'
+
+def sparse_dig(instructions: list, start_x: int, start_y: int):
+    x, y = start_x, start_y
+    cells_dug = {} # Key (x, y), Value: True if dug
+
+    for ins in instructions:
+        direction = ins["direction"]
+        distance = ins["distance"]
+        for _ in range(distance):
+            if direction == "U":
+                y -= 1
+            elif direction == "D":
+                y += 1
+            elif direction == "L":
+                x -= 1
+            elif direction == "R":
+                x += 1
+            cells_dug[(x, y)] = True
+
+    return cells_dug
