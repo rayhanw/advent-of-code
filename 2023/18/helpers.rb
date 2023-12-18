@@ -1,17 +1,14 @@
 def fill_between_hashes(arrays)
-  arrays.map do |row|
-    in_segment = false
-    new_row = row.map do |element|
-      if element == '#'
-        in_segment = !in_segment
-        element
-      elsif in_segment
-        '#'
-      else
-        element
-      end
+  arrays.each do |ary|
+    idx_start = ary.index('#')
+    idx_end = ary.rindex('#')
+    next if idx_start.nil? || idx_end.nil?
+
+    idx_start += 1
+    (idx_start...idx_end).each do |i|
+      ary[i] = '#'
     end
-    # Handle case where a row ends while still in a segment
-    new_row.reverse.map! { |e| e == '.' && in_segment ? '#' : e }.reverse
   end
+
+  arrays
 end

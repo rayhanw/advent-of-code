@@ -1,8 +1,11 @@
+require 'colorized_string'
 require 'English'
 require_relative 'helpers'
 
 ANSWERS = [
   221_870, # 1. Too high
+  437_542, # 2. Too high
+  210_259, # 3. Too high
 ].freeze
 
 inputs = $DEFAULT_INPUT.map(&:chomp).map do |line|
@@ -18,10 +21,10 @@ inputs.each do |input|
   grouped_inputs[dir] << input
 end
 
-X_MAX = grouped_inputs[:horizontal].max_by { |input| input[:distance] }[:distance]
-Y_MAX = grouped_inputs[:vertical].max_by { |input| input[:distance] }[:distance]
+X_MAX = grouped_inputs[:horizontal].filter { |ele| ele[:direction] == 'R' }.map { |ele| ele[:distance] }.sum
+Y_MAX = grouped_inputs[:vertical].filter { |ele| ele[:direction] == 'U' }.map { |ele| ele[:distance] }.sum
 
-grid = Array.new(Y_MAX * 100) { Array.new(X_MAX * 100, '.') }
+grid = Array.new(Y_MAX + 1) { Array.new(X_MAX, '.') }
 grid[0][0] = '#'
 last_coordinate = [0, 0]
 
@@ -75,5 +78,12 @@ end
 #   puts line.join(' ')
 # end
 
+sum = 0
 filled = fill_between_hashes(grid)
-p filled.flatten.count('#')
+filled.each do |line|
+  # puts line.join(' ')
+  hash_count = line.join('').count('#')
+  sum += hash_count
+end
+
+puts ColorizedString["Answer: #{sum}"].colorize(:green)
