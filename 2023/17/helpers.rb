@@ -29,16 +29,22 @@ def calculate_heat_loss(state, grid, new_position)
   state.heat_loss + additional_heat_loss
 end
 
-def possible_moves(state, grid)
+def possible_moves(state, grid, max_steps: 3, part: 1)
   # Logic to determine the next possible moves based on the current state
   # Make sure to consider the constraints of the problem
   x, y = state.position
   current_direction = state.direction
   steps_taken = state.steps
   possible_states = []
-
-  (DIRECTIONS - [OPPOSITE_DIRECTION[current_direction]]).each do |direction|
-    next if direction == current_direction && steps_taken >= 3
+  possible_directions = DIRECTIONS - [OPPOSITE_DIRECTION[current_direction]]
+  if steps_taken < 4
+    possible_directions = [current_direction]
+  end
+  p "Going #{current_direction} from [#{x}, #{y}] for #{steps_taken}"
+  p possible_directions
+  puts
+  possible_directions.each do |direction|
+    next if direction == current_direction && steps_taken >= max_steps
 
     new_x, new_y = calculate_new_position([x, y], direction)
 
