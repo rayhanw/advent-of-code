@@ -1,5 +1,9 @@
 from sys import argv
-from helpers import MAPPING, sparse_dig, calculate_grid_size
+from helpers import MAPPING, calculate_grid_size, record_turns, shoelace
+
+ANSWERS = [
+    52_240_110_406_730, # 1. Too low
+]
 
 filepath = argv[1]
 file = open(filepath, 'r')
@@ -23,25 +27,16 @@ for line in file:
     instructions.append(thisdict)
 
 grid_size, start_pos = calculate_grid_size(instructions)
+# instructions = [
+#     {"direction": "R", "distance": 3},
+#     {"direction": "D", "distance": 2},
+#     {"direction": "L", "distance": 3},
+#     {"direction": "U", "distance": 2},
+# ]
 
 for ins in instructions:
     print(ins)
 
-cells_dug = sparse_dig(instructions, *start_pos)
-grouped_keys = {}
-for k in cells_dug.keys():
-    x = k[0]
-    y = k[1]
-    if y in grouped_keys:
-        grouped_keys[y]["min"] = min(x, grouped_keys[y]["min"])
-        grouped_keys[y]["max"] = max(x, grouped_keys[y]["max"])
-    else:
-        grouped_keys[y] = { "min": x, "max": x }
-
-sum = 0
-for k in grouped_keys.keys():
-    total = grouped_keys[k]["max"] - grouped_keys[k]["min"] + 1
-    sum += total
-    print(f'depth={k} min={grouped_keys[k]["min"]}, max={grouped_keys[k]["max"]} | total={total}')
-
-print(f'Total: {sum}')
+turns = record_turns(instructions)
+area = shoelace(turns)
+print(f'\nArea: {area}')

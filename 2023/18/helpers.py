@@ -119,3 +119,33 @@ def sparse_dig(instructions: list, start_x: int, start_y: int):
             cells_dug[(x, y)] = True
 
     return cells_dug
+
+def record_turns(instructions: list):
+    x, y = 0, 0 # Starting point
+    turns = [(0, 0)]
+
+    for ins in instructions:
+        direction = ins["direction"]
+        distance = ins["distance"]
+        if direction == "U":
+            y -= distance
+        elif direction == "D":
+            y += distance + 1
+        elif direction == "L":
+            x -= distance
+        elif direction == "R":
+            x += distance + 1
+        print(f'Adding ({x}, {y})')
+        turns.append((x, y))
+
+    return turns
+
+def shoelace(turns):
+    n = len(turns)
+    area = 0
+    for i in range(n):
+        j = (i + 1) % n
+        area += turns[i][0] * turns[j][1]
+        area -= turns[j][0] * turns[i][1]
+    area = abs(area) / 2
+    return int(area)
