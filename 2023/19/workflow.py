@@ -24,7 +24,11 @@ class Rule:
             self.next_workflow = data
 
     def run(self, other: any):
-        pass
+        if self.operator == None:
+            return self.next_workflow
+
+        if self.operator == '<':
+            return self.next_workflow if other < self.value else None
 
 class Workflow:
     def __init__(self, information: dict):
