@@ -8,11 +8,14 @@ time = Benchmark.measure do
   disk_map = FILE.each_char.map.with_index do |char, idx|
     amount = char.to_i
     if idx.even?
-      (idx / 2).to_s * amount
+      Array.new(amount) { (idx / 2) }
     else
-      "." * amount
+      Array.new(amount) { "." }
     end
-  end.join("").chars
+  end
+
+  disk_map.flatten!
+  p disk_map
 
   counter = 0
   loop do
@@ -44,3 +47,4 @@ puts "---------------------------------------------".colorize(:yellow)
 puts time
 
 # P1: 90719109188 -> Too low
+# P1: 6_398_608_069_280 -> 🟢
