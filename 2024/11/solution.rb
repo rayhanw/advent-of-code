@@ -41,44 +41,23 @@ time = Benchmark.measure do
 
   modified = [*FILE]
   blink_count = 1
-  # until blink_count == 76
-  #   puts "After #{blink_count} #{blink_count == 1 ? 'blink' : 'blinks'}:".colorize(:light_blue)
-  #   modified = modified.flat_map do |number|
-  #     if memo.key?(number)
-  #       memo[number]
-  #     else
-  #       next_number = transform_number(number)
-  #       memo[number] = next_number
-  #     end
-  #   end
-
-  #   # puts modified.join(" ")
-
-  #   blink_count += 1
-  # end
 
   modified.each do |num|
     counters[num] += 1
   end
 
   temp_counter = { **counters }
-  until blink_count == 76
+  until blink_count > 75
     puts "After #{blink_count} #{blink_count == 1 ? 'blink' : 'blinks'}:".colorize(:light_blue)
     temp_temp_counter = Hash.new { |h, k| h[k] = 0 }
     puts temp_counter.keys.join(" ")
     temp_counter.each do |num, val|
       transformed_nums = transform_number(num)
-      # p [num, transformed_nums] if blink_count == 5
-      # p [num, transformed_nums] if blink_count == 6
       transformed_nums.each do |transformed_num|
         temp_temp_counter[transformed_num] += 1 * val
       end
-      # p temp_temp_counter if blink_count == 6
-      # puts if blink_count == 6
-      # p temp_temp_counter if blink_count == 5
     end
     temp_counter = temp_temp_counter
-
     blink_count += 1
   end
   p temp_counter
