@@ -3,7 +3,8 @@ require "colorize"
 require "colorized_string"
 
 FILE = File.readlines("input.txt").map(&:strip)
-SIZE = 70 # for real input, sample input: 6
+SIZE = 70 # 70 for real input, sample input: 6
+FIRST_BYTES = 1024 # 1024 for real input, sample input: 12
 
 COLORS = {
   "." => { color: :white },
@@ -97,7 +98,7 @@ end
 def reconstruct_path(predecessors, ending_point)
   current_node = ending_point
   path = []
-  until current_node.nil?
+  while current_node
     path.unshift(current_node)
     current_node = predecessors[current_node]
   end
@@ -117,32 +118,64 @@ time = Benchmark.realtime do
   starting_point = [0, 0]
   ending_point = [SIZE, SIZE]
 
-  puts "--- Initial Map ---"
-  coordinates[0...1024].each do |(x, y)|
-    grid[y][x] = "#"
-  end
-  print_map(grid)
+  # puts "--- Initial Map ---"
+  adjuster = 0
+  last_coordinate = nil
+  loop do
+    cloned_grid = grid.map(&:clone)
+    falling_bytes_coordinates = coordinates[0...(FIRST_BYTES + adjuster)]
+    # puts "FBC: #{falling_bytes_coordinates}"
+    falling_bytes_coordinates.each do |(x, y)|
+      cloned_grid[y][x] = "#"
+    end
+    graph = build_graph(cloned_grid)
+    result = dijkstra(graph, starting_point, ending_point)
+    # puts "Last predecessor: #{last_predecessor}"
+    last_coordinate = falling_bytes_coordinates.last
+    reached_end = result[:predecessors].keys.include? ending_point
+    puts "Adjuster: #{adjuster} -> 0..#{FIRST_BYTES + adjuster} -> #{reached_end ? '✅' : '❌'}"
+    # puts "Reached ending: #{reached_end ? '✅' : '❌'}"
+    # path = reconstruct_path(result[:predecessors], ending_point)
+    # path.each do |(x, y)|
+    #   cloned_grid[y][x] = "O"
+    # end
+    # print_map(cloned_grid)
+    # puts
 
-  graph = build_graph(grid)
-  # puts "--- Graph ---"
-  # pp graph
-  result = dijkstra(graph, starting_point, ending_point)
-  # puts "-" * 50
-  # puts "--- Distances ---"
-  # pp result[:distances]
+    break unless reached_end
+
+    adjuster += 1
+  end
+
+  puts "Answer: #{last_coordinate.join(',')}".colorize(color: :green)
+
+  # falling_bytes_coordinates = coordinates[0...FIRST_BYTES + 9]
+  # falling_bytes_coordinates.each do |(x, y)|
+  #   grid[y][x] = "#"
+  # end
+  # # print_map(grid)
+
+  # graph = build_graph(grid)
+  # # puts "--- Graph ---"
+  # # pp graph
+  # result = dijkstra(graph, starting_point, ending_point)
+  # # puts "-" * 50
+  # # puts "--- Distances ---"
+  # # pp result[:distances]
   # puts "--- Predecessors ---"
   # pp result[:predecessors]
-  # puts "--- Shortest path ---"
-  path = reconstruct_path(result[:predecessors], ending_point)
-  path.each do |(x, y)|
-    grid[y][x] = "O"
-  end
+  # # puts "--- Shortest path ---"
+  # path = reconstruct_path(result[:predecessors], ending_point)
+  # pp path
+  # path.each do |(x, y)|
+  #   grid[y][x] = "O"
+  # end
 
-  # puts "--- Final map ---"
-  # print_map(grid)
+  # # puts "--- Final map ---"
+  # # print_map(grid)
 
-  answer = grid.flatten.count("O") - 1
-  puts "Answer: #{answer}".colorize(color: :green)
+  # answer = grid.flatten.count("O") - 1
+  # puts "Answer: #{answer}".colorize(color: :green)
 end
 
 puts
