@@ -4,3 +4,4 @@
 **/*.txt
 
 **/*/__pycache__
+**/dump.rdb
